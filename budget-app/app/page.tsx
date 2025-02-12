@@ -110,7 +110,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-6">Gestion de Budget</h1>
       <nav className="space-y-4 text-lg">
         <Link href="/transactions" className="block text-blue-500">📜 Voir les transactions</Link>
-        <Link href="/goals" className="block text-green-500">🎯 Objectifs d'épargne</Link>
+        <Link href="/goals" className="block text-green-500">🎯 Objectifs d&rsquo;épargne</Link>
         <Link href="/settings" className="block text-gray-500">⚙️ Paramètres</Link>
       </nav>
     </div>
