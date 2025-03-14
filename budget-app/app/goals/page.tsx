@@ -69,22 +69,24 @@ export default function Goals() {
   }, []);
 
   useEffect(() => {
+    const processChartData = (data: Transaction[], setChartData: Function) => {
+      const filteredData = data.filter((t) => {
+        const date = new Date(t.date);
+        return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
+      });
+  
+      const categoryTotals: { [key: string]: number } = {};
+      filteredData.forEach((t) => {
+        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+      });
+  
+      setChartData(Object.keys(categoryTotals).map((category) => ({ category, total: categoryTotals[category] })));
+    };
+  
     processChartData(transactions, setChartData);
     processChartData(credits, setCreditChartData);
-  }, [transactions, credits, selectedMonth, selectedYear]);
-
-  const processChartData = (data: Transaction[], setChartData: Function) => {
-    const filteredData = data.filter((t) => {
-      const date = new Date(t.date);
-      return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
-    });
-    const categoryTotals: { [key: string]: number } = {};
-    filteredData.forEach((t) => {
-      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
-    });
-    setChartData(Object.keys(categoryTotals).map((category) => ({ category, total: categoryTotals[category] })));
-  };
-
+  }, [transactions, credits, selectedMonth, selectedYear]); 
+  
   return (
     <div className="p-6">
       <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">
