@@ -14,19 +14,31 @@ interface Transaction {
 }
 
 // Liste des catégories disponibles
-const categories = ["Loisir", "Logement", "Santé", "Transport", "Alimentation", "Sport", "Voyage", "Autres"];
+const categories = [
+  "Loisir",
+  "Logement",
+  "Santé/bien-être",
+  "Transport",
+  "Alimentation",
+  "Frais bancaires exceptionnels",
+  "Abonnement",
+  "Retrait",
+  "Autres"
+];
 
 // Attribution des couleurs aux catégories
 const categoryColors: { [key: string]: string } = {
-  "Loisir": "bg-blue-200",
+  "Loisir": "bg-purple-200",
   "Logement": "bg-green-200",
-  "Santé": "bg-red-200",
+  "Santé/bien-être": "bg-red-200",
   "Transport": "bg-yellow-200",
-  "Alimentation": "bg-purple-200",
-  "Sport": "bg-orange-200",
-  "Voyage": "bg-teal-200",
-  "Autres": "bg-gray-200"
+  "Alimentation": "bg-blue-200",
+  "Frais bancaires exceptionnels": "bg-orange-200",
+  "Abonnement": "bg-teal-200",
+  "Retrait": "bg-gray-400",
+  "Autres": "bg-gray-200",
 };
+
 
 export default function Transactions() {
   /*
