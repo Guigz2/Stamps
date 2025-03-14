@@ -6,7 +6,7 @@ export default function Goals() {
         <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition mb-4 inline-block">
         ⬅️ Retour à l&rsquo;accueil
         </Link>
-        <h1 className="text-2xl font-bold">🎯 Objectifs Financiers</h1>
+        <h1 className="text-2xl font-bold">🎯 Objectifs Financiers 🎯</h1>
       </div>
     );
   }
