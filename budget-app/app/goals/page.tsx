@@ -69,7 +69,11 @@ export default function Goals() {
   }, []);
 
   useEffect(() => {
-    const processChartData = (data: Transaction[], setChartData: Function) => {
+    const processChartData = (
+      data: Transaction[],
+      setChartData: React.Dispatch<React.SetStateAction<{ category: string; total: number }[]>>
+    ) => {
+    
       const filteredData = data.filter((t) => {
         const date = new Date(t.date);
         return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
