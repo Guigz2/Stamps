@@ -204,7 +204,7 @@ export default function Transactions() {
         <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition inline-block">
           ⬅️ Retour à l&rsquo;accueil
         </Link>
-        <h1 className="text-2xl font-bold flex-1 text-center">📜 Mes Transactions 📜</h1>
+        <h1 className="text-2xl font-bold flex-1 text-center">📜 Mes dépenses 📜</h1>
 
       <form onSubmit={handleSubmit} className="mt-4 p-4 bg-gray-100 rounded-lg">
         <input type="text" name="description" placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required className="w-full p-2 border rounded" />
@@ -219,28 +219,28 @@ export default function Transactions() {
         <button type="submit" className="bg-blue-500 text-white p-2 rounded mt-2 w-full">{editingId ? "Modifier" : "Ajouter"}</button>
       </form>
       
-      <div className="mt-4 p-4 bg-green-100 rounded-lg text-green-800 font-bold text-lg">
+      <div className="mt-4 p-4 bg-red-100 rounded-lg text-red-800 font-bold text-lg">
         💰 Total des dépenses du mois : {getTotalForCurrentMonth()} €
       </div>
 
       <table className="mt-4 w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-200">
-            <th>Description</th>
-            <th>Montant (€)</th>
-            <th>Catégorie</th>
-            <th>Date</th>
-            <th>Actions</th>
+          <tr className="bg-gray-200 border border-black">
+            <th className="text-center p-2 border border-black">Description</th>
+            <th className="text-center p-2 border border-black">Montant (€)</th>
+            <th className="text-center p-2 border border-black">Catégorie</th>
+            <th className="text-center p-2 border border-black">Date</th>
+            <th className="text-center p-2 border border-black">Actions</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((transaction) => (
-            <tr key={transaction.id} className={`${categoryColors[transaction.category] || "bg-white"}`}>
-              <td>{transaction.description}</td>
-              <td>{transaction.amount}</td>
-              <td>{transaction.category}</td>
-              <td>{new Date(transaction.date).toLocaleDateString()}</td>
-              <td>
+            <tr key={transaction.id} className={`${categoryColors[transaction.category] || "bg-white"} border border-black`}>
+              <td className="text-center p-2 border border-black">{transaction.description}</td>
+              <td className="text-center p-2 border border-black">{transaction.amount}</td>
+              <td className="text-center p-2 border border-black">{transaction.category}</td>
+              <td className="text-center p-2 border border-black">{new Date(transaction.date).toLocaleDateString()}</td>
+              <td className="text-center p-2 border border-black">
                 <button onClick={() => handleEdit(transaction)} className="text-blue-500 hover:text-blue-700">✏️</button>
                 <button onClick={() => handleDelete(transaction.id)} className="text-red-500 hover:text-red-700 ml-2">🗑️</button>
               </td>

@@ -1,11 +1,128 @@
+"use client";
+
 import Link from 'next/link';
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+const addMissingMonthlyPayments = async () => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1; // Mois actuel (1-12)
+
+  console.log("📅 Vérification des paiements manquants...");
+
+  // 📌 1. Récupérer tous les paiements mensuels
+  const { data: payments } = await supabase
+    .from("monthly_payment")
+    .select("id, desc, amount, category, type, created_at");
+
+  if (!payments || payments.length === 0) return;
+
+  // 📌 2. Trouver la dernière transaction/crédit ajouté
+  const { data: lastTransaction } = await supabase
+    .from("transactions")
+    .select("date")
+    .order("date", { ascending: false })
+    .limit(1);
+
+  const { data: lastCredit } = await supabase
+    .from("credits")
+    .select("date")
+    .order("date", { ascending: false })
+    .limit(1);
+
+  let lastDate = null;
+  if (lastTransaction && lastTransaction.length > 0) {
+    lastDate = new Date(lastTransaction[0].date);
+  }
+  if (lastCredit && lastCredit.length > 0) {
+    const lastCreditDate = new Date(lastCredit[0].date);
+    if (!lastDate || lastCreditDate > lastDate) {
+      lastDate = lastCreditDate;
+    }
+  }
+
+
+  // 📌 Si aucune transaction/crédit enregistré, démarrer depuis le plus ancien "created_at"
+  let oldestCreatedAt = new Date(currentYear, currentMonth - 2, 1); // Par défaut, commence le mois dernier
+  payments.forEach((payment) => {
+    const createdAtDate = new Date(payment.created_at);
+    if (createdAtDate < oldestCreatedAt) {
+      oldestCreatedAt = createdAtDate;
+    }
+  });
+
+  if (!lastDate || lastDate < oldestCreatedAt) {
+    lastDate = new Date(oldestCreatedAt);
+  }
+
+  // 📌 Vérifier tous les mois entre `created_at` et `lastDate`
+  const missingMonths = [];
+  while (lastDate.getFullYear() < currentYear || lastDate.getMonth() + 1 < currentMonth) {
+    lastDate.setMonth(lastDate.getMonth() + 1); // Passer au mois suivant
+    missingMonths.push({
+      year: lastDate.getFullYear(),
+      month: lastDate.getMonth() + 1, // (1-12)
+    });
+  }
+
+  if (missingMonths.length === 0) return;
+
+  // 📌 3. Ajouter les paiements pour chaque mois manquant
+  for (const { year, month } of missingMonths) {
+    const monthDate = new Date(year, month - 1, 1).toISOString().split("T")[0];
+
+    const transactionsToInsert: Array<{ desc: string; amount: number; category: string; date: string }> = [];
+    const creditsToInsert: Array<{ desc: string; amount: number; category: string; date: string }> = [];
+
+    payments.forEach((payment) => {
+      const createdAtDate = new Date(payment.created_at);
+      if (createdAtDate.getFullYear() > year || (createdAtDate.getFullYear() === year && createdAtDate.getMonth() + 1 > month)) {
+        return; // Ne pas ajouter un paiement avant sa création
+      }
+
+      if (payment.type === "Dépense") {
+        transactionsToInsert.push({
+          desc: payment.desc,
+          amount: payment.amount,
+          category: payment.category,
+          date: monthDate,
+        });
+      } else if (payment.type === "Crédit") {
+        creditsToInsert.push({
+          desc: payment.desc,
+          amount: payment.amount,
+          category: payment.category,
+          date: monthDate,
+        });
+      }
+    });
+
+    // ✅ Insertion dans transactions si c'est une dépense
+    if (transactionsToInsert.length > 0) {
+      await supabase.from("transactions").insert(transactionsToInsert);
+    }
+
+    // ✅ Insertion dans crédits si c'est un crédit
+    if (creditsToInsert.length > 0) {
+      await supabase.from("credits").insert(creditsToInsert);
+    }
+  }
+};
 
 export default function Home() {
+  // 📌 Exécuter au chargement de la page d'accueil
+  useEffect(() => {
+    addMissingMonthlyPayments();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Gestion de Budget</h1>
       <nav className="space-y-4 text-lg text-center">
-        <Link href="/transactions" className="block text-blue-500">📜 Ajouter des transactions 📜</Link>
+        <Link href="/transactions" className="block text-blue-500">📜 Ajouter des Dépenses 📜</Link>
+        <Link href="/credit" className="block text-blue-500">💰 Ajouter des Crédits 💰</Link>
+        <Link href="/mensuel" className="block text-blue-500">💳 Ajouter des Crédits/Dépenses Mensuels 💳</Link>
         <Link href="/goals" className="block text-green-500">🎯 Visualisation des finances 🎯</Link>
         <Link href="/settings" className="block text-gray-500">⚙️ Paramètres ⚙️</Link>
       </nav>
