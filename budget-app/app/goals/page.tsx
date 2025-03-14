@@ -89,18 +89,14 @@ export default function Goals() {
     midAngle,
     innerRadius,
     outerRadius,
-    percent,
-    name,
-    value
+    percent
   }: {
     cx: number;
     cy: number;
     midAngle: number;
     innerRadius: number;
     outerRadius: number;
-    percent: number;
-    name: string;
-    value: number;
+    percent: number
   }) => {
   
     const RADIAN = Math.PI / 180;
