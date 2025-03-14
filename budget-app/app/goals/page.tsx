@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { BarChart, Bar, XAxis, PieChart, Pie, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from "recharts";
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 // Définition du type de transaction
 interface Transaction {
