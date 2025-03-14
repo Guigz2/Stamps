@@ -83,7 +83,26 @@ export default function Goals() {
     setChartData(formattedData);
   };
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    name,
+    value
+  }: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+    name: string;
+    value: number;
+  }) => {
+  
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -96,13 +115,10 @@ export default function Goals() {
     );
   };
   
-  
-  
-
   // Mettre à jour les données du graphique quand les filtres changent
   useEffect(() => {
     processChartData(transactions, selectedMonth, selectedYear);
-  }, [selectedMonth, selectedYear, transactions]);
+  }, [transactions, selectedMonth, selectedYear]);
 
   return (
     <div className="p-6">
