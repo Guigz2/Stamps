@@ -88,7 +88,7 @@ export default function Goals() {
   return (
     <div className="p-6">
       <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">
-        ⬅️ Retour à l’accueil
+        ⬅️ Retour à l&rsquo;accueil
       </Link>
       <h1 className="text-2xl font-bold text-center flex-1">🎯 Visualisation des finances 🎯</h1>
 
