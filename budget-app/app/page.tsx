@@ -123,6 +123,8 @@ export default function Home() {
         <Link href="/transactions" className="block text-blue-500">📜 Ajouter des Dépenses 📜</Link>
         <Link href="/credit" className="block text-blue-500">💰 Ajouter des Crédits 💰</Link>
         <Link href="/mensuel" className="block text-blue-500">💳 Ajouter des Crédits/Dépenses Mensuels 💳</Link>
+        <Link href="/pdf_save" className="block text-blue-500">Sauvegarder un PDF</Link>
+        <Link href="/pdf_view" className="block text-blue-500">Regarder un PDF</Link>
         <Link href="/goals" className="block text-green-500">🎯 Visualisation des finances 🎯</Link>
         <Link href="/settings" className="block text-gray-500">⚙️ Paramètres ⚙️</Link>
       </nav>
