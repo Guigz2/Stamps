@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend  } from "recharts";
+import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell} from "recharts";
 
 /*
 https://media.licdn.com/dms/image/v2/D4E22AQHGjMzvJMWzLQ/feedshare-shrink_800/feedshare-shrink_800/0/1719510938980?e=2147483647&v=beta&t=LZaG9rbzGemVUJ_5cUDLWpxSHxUBcULEAkWrJD-rDoU

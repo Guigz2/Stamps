@@ -33,7 +33,7 @@ export default function UploadPDF() {
     const fileExt = file.name.split(".").pop();
     const filePath = `uploads/${Date.now()}.${fileExt}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("pdf-uploads") // Assurez-vous d'avoir un bucket nommé "pdfs" dans Supabase
       .upload(filePath, file);
 
