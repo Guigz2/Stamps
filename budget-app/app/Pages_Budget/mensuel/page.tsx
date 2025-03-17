@@ -172,8 +172,8 @@ export default function MonthlyPayments() {
   */
   return (
     <div className="p-6">
-      <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition inline-block">
-        ⬅️ Retour à l&rsquo;accueil
+      <Link href="/Pages_Budget" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition mb-4 inline-block">
+      ⬅️ Retour à l&rsquo;accueil
       </Link>
       <h1 className="text-2xl font-bold flex-1 text-center">💳 Mes Crédits/Dépenses Mensuels 💳</h1>
 

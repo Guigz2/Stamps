@@ -120,13 +120,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Gestion de Budget</h1>
       <nav className="space-y-4 text-lg text-center">
-        <Link href="/transactions" className="block text-blue-500">📜 Ajouter des Dépenses 📜</Link>
-        <Link href="/credit" className="block text-blue-500">💰 Ajouter des Crédits 💰</Link>
-        <Link href="/mensuel" className="block text-blue-500">💳 Ajouter des Crédits/Dépenses Mensuels 💳</Link>
-        <Link href="/pdf_save" className="block text-blue-500">Sauvegarder un PDF</Link>
-        <Link href="/pdf_view" className="block text-blue-500">Regarder un PDF</Link>
-        <Link href="/goals" className="block text-green-500">🎯 Visualisation des finances 🎯</Link>
-        <Link href="/settings" className="block text-gray-500">⚙️ Paramètres ⚙️</Link>
+        <Link href="/Pages_Budget" className="block text-blue-500">Application Budget</Link>
+        <Link href="/Pages_Taches" className="block text-blue-500">Application Tâches</Link>
       </nav>
     </div>
   );
