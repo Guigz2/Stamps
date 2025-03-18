@@ -118,9 +118,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Gestion de Budget</h1>
+      <h1 className="text-3xl font-bold mb-6">Liste des applications</h1>
       <nav className="space-y-4 text-lg text-center">
-        <Link href="/Pages_Budget" className="block text-blue-500">Application Budget</Link>
+        <Link href="/Pages_Budget/goals" className="block text-blue-500">Application Budget</Link>
         <Link href="/Pages_Taches" className="block text-blue-500">Application Tâches</Link>
       </nav>
     </div>
