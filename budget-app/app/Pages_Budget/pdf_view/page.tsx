@@ -77,7 +77,7 @@ export default function ViewPDF() {
           )}
         </header>
 
-      <h1 className="pt-16 text-2xl font-bold flex-1 text-center">Liste des PDFs</h1>
+      <h1 className="lg:pt-16 pt-20 text-2xl font-bold flex-1 text-center">Liste des PDFs</h1>
       <ul className="mt-4 w-1/2">
         {pdfs.map((pdf) => (
           <li key={pdf.id} className="flex justify-between p-2 border-b">

@@ -53,7 +53,7 @@ export default function Settings() {
           )}
         </header>
 
-        <h1 className="pt-16 text-2xl font-bold flex-1 text-center">⚙️ Paramètres ⚙️</h1>
+        <h1 className="lg:pt-16 pt-20 text-2xl font-bold flex-1 text-center">⚙️ Paramètres ⚙️</h1>
       </div>
     );
   }

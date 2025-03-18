@@ -198,7 +198,7 @@ export default function Credits() {
           )}
         </header>
 
-      <h1 className="pt-16 text-2xl font-bold flex-1 text-center">💰 Mes Crédits 💰</h1>
+      <h1 className="lg:pt-16 pt-20 text-2xl font-bold flex-1 text-center">💰 Mes Crédits 💰</h1>
 
       <form onSubmit={handleSubmit} className="mt-4 p-4 bg-gray-100 rounded-lg">
         <input type="text" name="description" placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required className="w-full p-2 border rounded" />

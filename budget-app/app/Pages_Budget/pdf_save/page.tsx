@@ -111,7 +111,7 @@ export default function UploadPDF() {
           )}
         </header>
 
-      <h1 className="pt-16 text-2xl font-bold flex-1 text-center">Sauvegarder un PDF</h1>
+      <h1 className="lg:pt-16 pt-20 text-2xl font-bold flex-1 text-center">Sauvegarder un PDF</h1>
       <input type="file" accept=".pdf" onChange={handleFileChange} className="mt-4" />
       <button
         onClick={uploadFile}

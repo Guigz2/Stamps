@@ -204,7 +204,7 @@ useEffect(() => {
           )}
         </header>
 
-      <h1 className="pt-16 text-2xl font-bold text-center flex-1">🎯 Visualisation des finances 🎯</h1>
+      <h1 className="lg:pt-16 pt-20 text-2xl font-bold text-center flex-1">🎯 Visualisation des finances 🎯</h1>
   
       {/* Filtres */}
       <div className="flex space-x-4 justify-center my-4">
