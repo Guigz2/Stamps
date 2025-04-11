@@ -1,5 +1,5 @@
 "use client";
-
+import "./styles.css";
 import Link from 'next/link';
 
 export default function Navbar() {
@@ -9,7 +9,13 @@ export default function Navbar() {
       <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700">
       ⬅️ Retour à l&rsquo;accueil
       </Link>
-        <h1 className="text-2xl font-bold text-gray-700">Gestion de Budget</h1>
+      {/* Titre  */}
+      <div className="gradient-background">
+        <h1 className="font-press-start text-2xl font-bold text-white">
+          Budget App
+        </h1>
+      </div>
+            
         <nav className="flex space-x-6 text-lg">
           <Link href="/Pages_Budget/transactions" className="text-blue-500 hover:underline">Dépenses</Link>
           <Link href="/Pages_Budget/credit" className="text-blue-500 hover:underline">Crédits</Link>

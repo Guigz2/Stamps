@@ -1,5 +1,6 @@
 "use client";
 
+import "./styles.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
@@ -168,7 +169,11 @@ useEffect(() => {
             </Link>
             
             {/* Titre  */}
-            <h1 className="text-2xl font-bold text-gray-700">Gestion de Budget</h1>
+            <div className="gradient-background">
+              <h1 className="font-press-start text-2xl font-bold text-white">
+                Budget App
+              </h1>
+            </div>
             
             {/* Bouton Menu Mobile */}
             <button 

@@ -109,7 +109,7 @@ const addMissingMonthlyPayments = async () => {
     }
   }
 };
-
+/*
 export default function Home() {
   // 📌 Exécuter au chargement de la page d'accueil
   useEffect(() => {
@@ -124,5 +124,66 @@ export default function Home() {
         <Link href="/Pages_Taches" className="block text-blue-500">Application Tâches</Link>
       </nav>
     </div>
+  );
+}
+*/
+
+// app/page.tsx (ou pages/index.tsx selon ton setup)
+export default function Home() {
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+
+  const apps = [
+    {
+      title: 'Budget App',
+      color: 'from-red-500 to-orange-500',
+      image: '/budget-icon.png',
+      href: '/Pages_Budget/goals',
+    },
+    {
+      title: 'Tasking App',
+      color: 'from-blue-500 to-cyan-500',
+      image: '/tasking-icon.png',
+      href: '/Pages_Taches',
+    },
+    {
+      title: 'Supermarket App',
+      color: 'from-green-500 to-lime-500',
+      image: '/supermarket-icon.png',
+      href: '/supermarket',
+    },
+  ];
+
+  return (
+    <main className="min-h-screen bg-white text-black flex flex-col items-center">
+      {/* Header */}
+      <div className="w-full bg-gradient-to-r from-pink-400 to-purple-600 py-12 text-center">
+        <h1 style={{ fontFamily: '"Press Start 2P", cursive, Arial, Helvetica, sans-serif' }}
+            className="text-3xl md:text-5xl font-bold text-white">
+          Select your application
+        </h1>
+      </div>
+
+      {/* App Cards */}
+      <div className="flex flex-wrap justify-center gap-8 p-8">
+        {apps.map((app) => (
+          <a
+            key={app.title}
+            href={app.href}
+            className={`w-80 h-24 rounded-lg bg-gradient-to-br ${app.color} shadow-md hover:scale-105 transition-transform flex items-center gap-4 px-4`}
+          >
+            <img src={app.image} alt={app.title} className="h-16 w-16" />
+            <span style={{ fontFamily: '"Press Start 2P", cursive, Arial, Helvetica, sans-serif' }}
+                  className="text-lg text-black">
+              {app.title}
+            </span>
+          </a>
+        ))}
+      </div>
+    </main>
   );
 }
