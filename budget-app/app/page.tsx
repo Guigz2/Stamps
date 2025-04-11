@@ -130,6 +130,7 @@ export default function Home() {
 // app/page.tsx (ou pages/index.tsx selon ton setup)
 export default function Home() {
   useEffect(() => {
+    addMissingMonthlyPayments();
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
     link.rel = 'stylesheet';
