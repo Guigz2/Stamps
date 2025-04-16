@@ -6,9 +6,9 @@ export default function Navbar() {
   return (
     <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="/" >
-              <img src={"/homepage-icon.png"} className="h-14 w-14" />
-            </a>
+      <Link href="/" >
+              <img src="/homepage-icon.png" className="h-14 w-14" />
+      </Link>
       {/* Titre  */}
       <div className="gradient-background">
         <h1 className="font-press-start text-2xl font-bold text-white">
