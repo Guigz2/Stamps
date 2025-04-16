@@ -71,9 +71,9 @@ export default function UploadPDF() {
       <header className="w-full bg-white shadow-md fixed top-0 left-0 z-50">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
             {/* Bouton de retour */}
-            <Link href="/" className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700">
-            ⬅️ Retour à l&rsquo;accueil
-            </Link>
+            <a href="/" >
+              <img src={"/homepage-icon.png"} className="h-14 w-14" />
+            </a>
             
             {/* Titre  */}
             <div className="gradient-background">
