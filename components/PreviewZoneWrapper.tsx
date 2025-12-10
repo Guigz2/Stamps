@@ -15,6 +15,10 @@ interface PreviewZoneProps {
     opacity: number;
   };
   onClose: () => void;
+  onPdfInfoChange?: (info: { currentPage: number; numPages: number; isProcessing: boolean }) => void;
+  onRegisterProcessHandler?: (handler: () => void) => void;
+  externalCurrentPage?: number;
+  onConfigChange: (newConfig: Partial<PreviewZoneProps['config']>) => void;
 }
 
 // Import dynamique pour éviter les erreurs SSR avec pdf.js
