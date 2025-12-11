@@ -102,9 +102,6 @@ export default function DropZone({ onPdfUpload }: DropZoneProps) {
               <p className="text-xl font-bold text-white tracking-wider">
                 DROP PDF FILE
               </p>
-              <p className="text-[#8B92B0] text-sm">
-                MAX 50MB
-              </p>
               <p className="text-[#6B7280] text-xs pt-4">
                 or click to browse
               </p>
