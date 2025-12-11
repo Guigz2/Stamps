@@ -65,13 +65,34 @@ export async function stampPdf(file: File, config: StampConfig): Promise<Uint8Ar
           stampFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       }
     } else if (config.stampType === 'image' && config.stampImage) {
-      // Embed image
-      const imageBytes = await fetch(config.stampImage).then(res => res.arrayBuffer());
+      // Embed image - Handle data URLs properly for iOS/Safari compatibility
+      let imageBytes: ArrayBuffer;
       
-      if (config.stampImage.includes('png')) {
-        stampImage = await pdfDoc.embedPng(imageBytes);
+      if (config.stampImage.startsWith('data:')) {
+        // Convert data URL to ArrayBuffer directly (Safari/iOS compatible)
+        const base64Data = config.stampImage.split(',')[1];
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        imageBytes = bytes.buffer;
       } else {
+        // Regular URL
+        imageBytes = await fetch(config.stampImage).then(res => res.arrayBuffer());
+      }
+      
+      if (config.stampImage.includes('png') || config.stampImage.includes('image/png')) {
+        stampImage = await pdfDoc.embedPng(imageBytes);
+      } else if (config.stampImage.includes('jpg') || config.stampImage.includes('jpeg') || config.stampImage.includes('image/jpeg')) {
         stampImage = await pdfDoc.embedJpg(imageBytes);
+      } else {
+        // Try PNG as default for unknown formats
+        try {
+          stampImage = await pdfDoc.embedPng(imageBytes);
+        } catch {
+          stampImage = await pdfDoc.embedJpg(imageBytes);
+        }
       }
     }
     
