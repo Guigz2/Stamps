@@ -12,6 +12,53 @@ interface StampConfig {
   opacity: number;
 }
 
+// Convert any image to PNG ArrayBuffer using Canvas
+async function convertImageToPng(dataUrl: string): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      try {
+        // Create canvas with image dimensions
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw image on canvas
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert to PNG blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('Failed to convert image to blob'));
+            return;
+          }
+          
+          // Convert blob to ArrayBuffer
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as ArrayBuffer);
+          };
+          reader.onerror = () => reject(new Error('Failed to read blob'));
+          reader.readAsArrayBuffer(blob);
+        }, 'image/png');
+      } catch (error) {
+        reject(error);
+      }
+    };
+    
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = dataUrl;
+  });
+}
+
 export async function stampPdf(file: File, config: StampConfig): Promise<Uint8Array> {
   try {
     // Load the PDF
@@ -65,34 +112,23 @@ export async function stampPdf(file: File, config: StampConfig): Promise<Uint8Ar
           stampFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
       }
     } else if (config.stampType === 'image' && config.stampImage) {
-      // Embed image - Handle data URLs properly for iOS/Safari compatibility
-      let imageBytes: ArrayBuffer;
-      
-      if (config.stampImage.startsWith('data:')) {
-        // Convert data URL to ArrayBuffer directly (Safari/iOS compatible)
-        const base64Data = config.stampImage.split(',')[1];
-        const binaryString = atob(base64Data);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-        imageBytes = bytes.buffer;
-      } else {
-        // Regular URL
-        imageBytes = await fetch(config.stampImage).then(res => res.arrayBuffer());
-      }
-      
-      if (config.stampImage.includes('png') || config.stampImage.includes('image/png')) {
+      // Embed image - Convert to clean PNG format for maximum compatibility
+      try {
+        console.log('Processing image stamp...');
+        console.log('Original image data URL length:', config.stampImage.length);
+        
+        // Convert any image format to PNG using Canvas (works on all browsers/devices)
+        console.log('Converting image to PNG format...');
+        const imageBytes = await convertImageToPng(config.stampImage);
+        console.log('Converted to PNG ArrayBuffer:', imageBytes.byteLength, 'bytes');
+        
+        // Embed PNG into PDF
+        console.log('Embedding PNG into PDF...');
         stampImage = await pdfDoc.embedPng(imageBytes);
-      } else if (config.stampImage.includes('jpg') || config.stampImage.includes('jpeg') || config.stampImage.includes('image/jpeg')) {
-        stampImage = await pdfDoc.embedJpg(imageBytes);
-      } else {
-        // Try PNG as default for unknown formats
-        try {
-          stampImage = await pdfDoc.embedPng(imageBytes);
-        } catch {
-          stampImage = await pdfDoc.embedJpg(imageBytes);
-        }
+        console.log('PNG embedded successfully');
+      } catch (imageError) {
+        console.error('Failed to embed image:', imageError);
+        throw new Error(`Failed to embed stamp image: ${imageError instanceof Error ? imageError.message : 'Unknown error'}`);
       }
     }
     
