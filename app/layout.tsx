@@ -9,7 +9,7 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "STAMP.OS - PDF Stamping Tool",
+  title: "STAMP - PDF Stamping Tool",
   description: "Automatically stamp all pages of your PDF with initials or custom images",
 };
 
