@@ -81,14 +81,14 @@ export default function Home() {
       {/* Header */}
       <header className="bg-[#0D1128] border-b border-[#2A3148] px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Logo className="w-8 h-8" />
+          <Logo className="w-16 h-16" />
           <div>
-            <h1 className="text-white font-bold text-xl tracking-wider">STAMP.OS</h1>
+            <h1 className="text-white font-bold text-xl tracking-wider">STAMP</h1>
             <p className="text-[#8B92B0] text-xs">v1.0</p>
           </div>
         </div>
         <a 
-          href="https://github.com" 
+          href="https://github.com/Guigz2" 
           target="_blank" 
           rel="noopener noreferrer"
           className="text-[#8B92B0] hover:text-white transition-colors"
@@ -134,7 +134,7 @@ export default function Home() {
             <span className="text-xs font-semibold tracking-wider text-[#8B92B0]">SYSTEM_ONLINE</span>
           </div>
           <div className="text-xs text-[#8B92B0] tracking-wide">
-            © 2025 STAMP.OS // PRECISION PDF TOOLS
+            PRECISION PDF TOOLS
           </div>
           </footer>
         </main>

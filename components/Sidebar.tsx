@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState, useRef, useEffect } from 'react';
 
 interface SidebarProps {
   config: {
@@ -36,6 +36,17 @@ export default function Sidebar({
   onDownload, 
   isProcessing = false 
 }: SidebarProps) {
+  const [editingField, setEditingField] = useState<'size' | 'xOffset' | 'yOffset' | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingField && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingField]);
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
@@ -44,6 +55,30 @@ export default function Sidebar({
         onConfigChange({ stampImage: event.target?.result as string });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const startEditing = (field: 'size' | 'xOffset' | 'yOffset', currentValue: number) => {
+    setEditingField(field);
+    setEditValue(String(currentValue));
+  };
+
+  const finishEditing = (field: 'size' | 'xOffset' | 'yOffset', min: number, max: number) => {
+    const numValue = Number(editValue);
+    if (!isNaN(numValue)) {
+      const clampedValue = Math.max(min, Math.min(max, numValue));
+      onConfigChange({ [field]: clampedValue });
+    }
+    setEditingField(null);
+    setEditValue('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, field: 'size' | 'xOffset' | 'yOffset', min: number, max: number) => {
+    if (e.key === 'Enter') {
+      finishEditing(field, min, max);
+    } else if (e.key === 'Escape') {
+      setEditingField(null);
+      setEditValue('');
     }
   };
 
@@ -77,7 +112,7 @@ export default function Sidebar({
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => onConfigChange({ stampType: 'text' })}
-              className={`px-4 py-3 rounded border transition-all ${
+              className={`px-4 py-3 border transition-all ${
                 config.stampType === 'text'
                   ? 'bg-[#FF6B2C] border-[#FF6B2C] text-white'
                   : 'bg-[#1A1F3A] border-[#2A3148] text-[#8B92B0] hover:border-[#FF6B2C]'
@@ -92,7 +127,7 @@ export default function Sidebar({
             </button>
             <button
               onClick={() => onConfigChange({ stampType: 'image' })}
-              className={`px-4 py-3 rounded border transition-all ${
+              className={`px-4 py-3 border transition-all ${
                 config.stampType === 'image'
                   ? 'bg-[#FF6B2C] border-[#FF6B2C] text-white'
                   : 'bg-[#1A1F3A] border-[#2A3148] text-[#8B92B0] hover:border-[#FF6B2C]'
@@ -119,7 +154,7 @@ export default function Sidebar({
                 type="text"
                 value={config.initials}
                 onChange={(e) => onConfigChange({ initials: e.target.value })}
-                className="w-full px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] rounded text-white focus:border-[#FF6B2C] focus:outline-none transition-colors font-mono"
+                className="w-full px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] text-white focus:border-[#FF6B2C] focus:outline-none transition-colors font-mono"
                 placeholder="ABC"
               />
             </div>
@@ -131,7 +166,7 @@ export default function Sidebar({
               <select
                 value={config.font}
                 onChange={(e) => onConfigChange({ font: e.target.value })}
-                className="w-full px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] rounded text-white focus:border-[#FF6B2C] focus:outline-none transition-colors cursor-pointer"
+                className="w-full px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] text-white focus:border-[#FF6B2C] focus:outline-none transition-colors cursor-pointer"
               >
                 <option value="handwritten" style={{ fontFamily: 'cursive' }}>Handwritten</option>
                 <option value="helvetica" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>Helvetica</option>
@@ -156,7 +191,7 @@ export default function Sidebar({
                   onChange={handleImageUpload}
                   className="hidden"
                 />
-                <div className="px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] rounded text-[#8B92B0] hover:border-[#FF6B2C] transition-colors cursor-pointer text-center text-sm font-semibold">
+                <div className="px-4 py-3 bg-[#1A1F3A] border border-[#2A3148] text-[#8B92B0] hover:border-[#FF6B2C] transition-colors cursor-pointer text-center text-sm font-semibold">
                   {config.stampImage ? '✓ Image Loaded' : '+ Upload Image'}
                 </div>
               </label>
@@ -165,7 +200,7 @@ export default function Sidebar({
                   <img
                     src={config.stampImage}
                     alt="Stamp preview"
-                    className="w-full h-24 object-contain bg-[#1A1F3A] rounded border border-[#2A3148] p-2"
+                    className="w-full h-24 object-contain bg-[#1A1F3A] border border-[#2A3148] p-2"
                   />
                 </div>
               )}
@@ -177,7 +212,27 @@ export default function Sidebar({
         <div>
           <label className="flex justify-between items-center text-[#8B92B0] text-xs font-semibold mb-3 tracking-wider">
             <span>SIZE (Px/PT)</span>
-            <span className="text-[#FF6B2C]">{config.size}</span>
+            {editingField === 'size' ? (
+              <input
+                ref={inputRef}
+                type="number"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onBlur={() => finishEditing('size', 6, 200)}
+                onKeyDown={(e) => handleKeyDown(e, 'size', 6, 200)}
+                className="w-16 px-2 py-1 bg-[#1A1F3A] border border-[#FF6B2C] text-[#FF6B2C] text-right focus:outline-none"
+                min="6"
+                max="200"
+              />
+            ) : (
+              <span 
+                className="text-[#FF6B2C] cursor-pointer hover:bg-[#FF6B2C] hover:text-white px-2 py-1 transition-colors"
+                onDoubleClick={() => startEditing('size', config.size)}
+                title="Double-click to edit"
+              >
+                {config.size}
+              </span>
+            )}
           </label>
           <input
             type="range"
@@ -185,12 +240,13 @@ export default function Sidebar({
             max="200"
             value={config.size}
             onChange={(e) => onConfigChange({ size: Number(e.target.value) })}
-            className="w-full h-2 bg-[#1A1F3A] rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 bg-[#1A1F3A] appearance-none cursor-pointer slider"
+            style={{ '--value': `${((config.size - 6) / (200 - 6)) * 100}%` } as React.CSSProperties}
           />
         </div>
 
         {/* Coordinate System Info */}
-        <div className="p-3 bg-[#1A1F3A] border border-[#2A3148] rounded">
+        <div className="p-3 bg-[#1A1F3A] border border-[#2A3148] ">
           <div className="flex items-start gap-2">
             <svg className="w-4 h-4 text-[#FF6B2C] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -206,7 +262,27 @@ export default function Sidebar({
         <div>
           <label className="flex justify-between items-center text-[#8B92B0] text-xs font-semibold mb-3 tracking-wider">
             <span>X OFFSET (RIGHT)</span>
-            <span className="text-[#FF6B2C]">{config.xOffset}</span>
+            {editingField === 'xOffset' ? (
+              <input
+                ref={inputRef}
+                type="number"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onBlur={() => finishEditing('xOffset', 5, 600)}
+                onKeyDown={(e) => handleKeyDown(e, 'xOffset', 5, 600)}
+                className="w-16 px-2 py-1 bg-[#1A1F3A] border border-[#FF6B2C] text-[#FF6B2C] text-right focus:outline-none"
+                min="5"
+                max="600"
+              />
+            ) : (
+              <span 
+                className="text-[#FF6B2C] cursor-pointer hover:bg-[#FF6B2C] hover:text-white px-2 py-1 transition-colors"
+                onDoubleClick={() => startEditing('xOffset', config.xOffset)}
+                title="Double-click to edit"
+              >
+                {config.xOffset}
+              </span>
+            )}
           </label>
           <input
             type="range"
@@ -214,16 +290,36 @@ export default function Sidebar({
             max="600"
             value={config.xOffset}
             onChange={(e) => onConfigChange({ xOffset: Number(e.target.value) })}
-            className="w-full h-2 bg-[#1A1F3A] rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 bg-[#1A1F3A] appearance-none cursor-pointer slider"
+            style={{ '--value': `${((config.xOffset - 5) / (600 - 5)) * 100}%` } as React.CSSProperties}
           />
-          <p className="text-xs text-[#6B7280] mt-2">Distance from right edge (0,0 = bottom-right)</p>
         </div>
 
         {/* Y Offset */}
         <div>
           <label className="flex justify-between items-center text-[#8B92B0] text-xs font-semibold mb-3 tracking-wider">
             <span>Y OFFSET (BOTTOM)</span>
-            <span className="text-[#FF6B2C]">{config.yOffset}</span>
+            {editingField === 'yOffset' ? (
+              <input
+                ref={inputRef}
+                type="number"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onBlur={() => finishEditing('yOffset', 5, 900)}
+                onKeyDown={(e) => handleKeyDown(e, 'yOffset', 5, 900)}
+                className="w-16 px-2 py-1 bg-[#1A1F3A] border border-[#FF6B2C] text-[#FF6B2C] text-right focus:outline-none"
+                min="5"
+                max="900"
+              />
+            ) : (
+              <span 
+                className="text-[#FF6B2C] cursor-pointer hover:bg-[#FF6B2C] hover:text-white px-2 py-1 transition-colors"
+                onDoubleClick={() => startEditing('yOffset', config.yOffset)}
+                title="Double-click to edit"
+              >
+                {config.yOffset}
+              </span>
+            )}
           </label>
           <input
             type="range"
@@ -231,9 +327,9 @@ export default function Sidebar({
             max="900"
             value={config.yOffset}
             onChange={(e) => onConfigChange({ yOffset: Number(e.target.value) })}
-            className="w-full h-2 bg-[#1A1F3A] rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 bg-[#1A1F3A] appearance-none cursor-pointer slider"
+            style={{ '--value': `${((config.yOffset - 5) / (900 - 5)) * 100}%` } as React.CSSProperties}
           />
-          <p className="text-xs text-[#6B7280] mt-2">Distance from bottom edge (0,0 = bottom-right)</p>
         </div>
 
         {/* Page Navigation - Only show if PDF is loaded */}
@@ -246,7 +342,7 @@ export default function Sidebar({
               <button
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 bg-[#1A1F3A] border border-[#2A3148] rounded text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#FF6B2C] transition-colors flex-1 text-sm"
+                className="px-3 py-2 bg-[#1A1F3A] border border-[#2A3148] text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#FF6B2C] transition-colors flex-1 text-sm"
               >
                 ← Prev
               </button>
@@ -256,7 +352,7 @@ export default function Sidebar({
               <button
                 onClick={() => onPageChange(Math.min(numPages, currentPage + 1))}
                 disabled={currentPage === numPages}
-                className="px-3 py-2 bg-[#1A1F3A] border border-[#2A3148] rounded text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#FF6B2C] transition-colors flex-1 text-sm"
+                className="px-3 py-2 bg-[#1A1F3A] border border-[#2A3148] text-white disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#FF6B2C] transition-colors flex-1 text-sm"
               >
                 Next →
               </button>
@@ -271,7 +367,7 @@ export default function Sidebar({
           <button
             onClick={onDownload}
             disabled={isProcessing || (config.stampType === 'image' && !config.stampImage)}
-            className="w-full bg-[#FF6B2C] hover:bg-[#FF7A3D] disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-3 tracking-wider shadow-lg"
+            className="w-full bg-[#FF6B2C] hover:bg-[#FF7A3D] disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-6 transition-all flex items-center justify-center gap-3 tracking-wider shadow-lg"
           >
             {isProcessing ? (
               <>
